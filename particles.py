@@ -12,12 +12,14 @@ class Particle:
         self.position = pygame.math.Vector2(position)
         self.speed = speed
         self.direction = pygame.math.Vector2(direction).normalize()
+        self.image = self.load_image(PARTICLE_IMAGE)
+        if self.direction.x == 0:
+            self.direction.x = random.choice([0.01, -0.01])
 
     def load_image(self, image_filename):
         return pygame.image.load(image_filename).convert_alpha()
 
     def draw(self, screen):
-        self.image = self.load_image(PARTICLE_IMAGE)
         screen.blit(self.image, self.position)
 
     def move(self, time_passed):
@@ -41,9 +43,11 @@ if __name__ == "__main__":
             elif event.type == pygame.USEREVENT:
                 print("{} frames last second, with {} particles active".format(frame_counter, len(particles)))
                 frame_counter = 0
+            if event.type == pygame.KEYDOWN:
+                import pdb; pdb.set_trace()
         frame_counter += 1
         time_passed = clock.tick(200) / 1000.0
-
+ 
         for i in range(int(2000 * time_passed)):
             particles.append(Particle(
                             (SCREEN_X / 2, SCREEN_Y / 2), 
